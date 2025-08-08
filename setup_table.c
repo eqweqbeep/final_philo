@@ -1,28 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   setup_table.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jait-chd <jait-chd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: <login> <email@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/04 16:12:22 by jait-chd          #+#    #+#             */
-/*   Updated: 2025/08/04 16:12:38 by jait-chd         ###   ########.fr       */
+/*   Created: 2025/08/07 00:00:00 by <login>           #+#    #+#             */
+/*   Updated: 2025/08/07 00:00:00 by <login>          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void destroy_mutexes(t_table *args)
+void setup_table(t_table *args, t_philo *philos, int i)
 {
-	int i = 0;
-
-	while (i < args->n)
-	{
-		pthread_mutex_destroy(&args->forks[i]);
-		i++;
-	}
-	pthread_mutex_destroy(&args->print);
-	pthread_mutex_destroy(&args->set);
-	free(args->forks);
-	free(args->philos);
+    philos[i].id = i + 1;
+    philos[i].left = i;
+    philos[i].right = (i + 1) % args->n;
+    philos[i].access = args;
+    philos[i].meals_eaten = 0;
+    philos[i].last_meal_time = args->start_time;
 }
+

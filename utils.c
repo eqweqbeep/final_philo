@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_threads.c                                   :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: <login> <email@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,30 +10,39 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_utils.h"
 
-void *philo_routine(void *ptr);
-void *monitor(void *ptr);
-
-int create_threads(t_table *args, t_philo *philos)
+int is_valid_number(char *str)
 {
     int i = 0;
-    pthread_t monitor_thread;
-    while (i < args->n)
+    long num = 0;
+    if (!str || !str[0])
+        return (0);
+    if (str[i] == '+')
+        i++;
+    while (str[i])
     {
-        if (pthread_create(&philos[i].thread, NULL, philo_routine, &philos[i]))
+        if (!(str[i] >= '0' && str[i] <= '9'))
+            return (0);
+        num = num * 10 + (str[i] - '0');
+        if (num > 2147483647)
             return (0);
         i++;
     }
-    if (pthread_create(&monitor_thread, NULL, monitor, args))
-        return (0);
-    pthread_join(monitor_thread, NULL);
-    i = 0;
-    while (i < args->n)
+    return (1);
+}
+
+int ft_atoi(const char *str)
+{
+    int i = 0;
+    int num = 0;
+    if (str[i] == '+')
+        i++;
+    while (str[i])
     {
-        pthread_join(philos[i].thread, NULL);
+        num = num * 10 + (str[i] - '0');
         i++;
     }
-    return (1);
+    return (num);
 }
 

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_threads.c                                   :+:      :+:    :+:   */
+/*   philo_utils.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: <login> <email@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,30 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#ifndef PHILO_UTILS_H
+#define PHILO_UTILS_H
 
-void *philo_routine(void *ptr);
-void *monitor(void *ptr);
+int is_valid_number(char *str);
+int ft_atoi(const char *str);
 
-int create_threads(t_table *args, t_philo *philos)
-{
-    int i = 0;
-    pthread_t monitor_thread;
-    while (i < args->n)
-    {
-        if (pthread_create(&philos[i].thread, NULL, philo_routine, &philos[i]))
-            return (0);
-        i++;
-    }
-    if (pthread_create(&monitor_thread, NULL, monitor, args))
-        return (0);
-    pthread_join(monitor_thread, NULL);
-    i = 0;
-    while (i < args->n)
-    {
-        pthread_join(philos[i].thread, NULL);
-        i++;
-    }
-    return (1);
-}
-
+#endif

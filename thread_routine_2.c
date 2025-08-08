@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_threads.c                                   :+:      :+:    :+:   */
+/*   thread_routine_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: <login> <email@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,28 +12,34 @@
 
 #include "philo.h"
 
-void *philo_routine(void *ptr);
-void *monitor(void *ptr);
-
-int create_threads(t_table *args, t_philo *philos)
+void thinking(t_philo *philo)
 {
-    int i = 0;
-    pthread_t monitor_thread;
-    while (i < args->n)
-    {
-        if (pthread_create(&philos[i].thread, NULL, philo_routine, &philos[i]))
-            return (0);
-        i++;
-    }
-    if (pthread_create(&monitor_thread, NULL, monitor, args))
-        return (0);
-    pthread_join(monitor_thread, NULL);
-    i = 0;
-    while (i < args->n)
-    {
-        pthread_join(philos[i].thread, NULL);
-        i++;
-    }
-    return (1);
+    if (check_death(philo))
+        return;
+    print_status(philo, "is thinking");
+    usleep(1000);
 }
 
+void *philo_routine(void *ptr)
+{
+    t_philo *philo = (t_philo *)ptr;
+    if (philo->id % 2 == 0 || philo->id == philo->access->n)
+        usleep(1000);
+    if (philo->access->n == 1)
+    {
+        print_status(philo, "has taken left fork");
+        usleep(philo->access->time_t_die * 1000);
+        return (NULL);
+    }
+    while (!check_death(philo))
+    {
+        if (take_forks(philo))
+        {
+            eating(philo);
+            put_forks(philo);
+        }
+        sleeping(philo);
+        thinking(philo);
+    }
+    return (NULL);
+}

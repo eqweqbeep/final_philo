@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_threads.c                                   :+:      :+:    :+:   */
+/*   time_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: <login> <email@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,30 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include <sys/time.h>
+#include <stdlib.h>
 
-void *philo_routine(void *ptr);
-void *monitor(void *ptr);
-
-int create_threads(t_table *args, t_philo *philos)
+long time_stamp_sch(void)
 {
-    int i = 0;
-    pthread_t monitor_thread;
-    while (i < args->n)
-    {
-        if (pthread_create(&philos[i].thread, NULL, philo_routine, &philos[i]))
-            return (0);
-        i++;
-    }
-    if (pthread_create(&monitor_thread, NULL, monitor, args))
-        return (0);
-    pthread_join(monitor_thread, NULL);
-    i = 0;
-    while (i < args->n)
-    {
-        pthread_join(philos[i].thread, NULL);
-        i++;
-    }
-    return (1);
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 

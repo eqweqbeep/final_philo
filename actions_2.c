@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_threads.c                                   :+:      :+:    :+:   */
+/*   actions_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: <login> <email@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,28 +12,22 @@
 
 #include "philo.h"
 
-void *philo_routine(void *ptr);
-void *monitor(void *ptr);
-
-int create_threads(t_table *args, t_philo *philos)
+int take_forks_odd(t_philo *philo)
 {
-    int i = 0;
-    pthread_t monitor_thread;
-    while (i < args->n)
+    pthread_mutex_lock(&philo->access->forks[philo->left]);
+    if (check_death(philo))
     {
-        if (pthread_create(&philos[i].thread, NULL, philo_routine, &philos[i]))
-            return (0);
-        i++;
-    }
-    if (pthread_create(&monitor_thread, NULL, monitor, args))
+        pthread_mutex_unlock(&philo->access->forks[philo->left]);
         return (0);
-    pthread_join(monitor_thread, NULL);
-    i = 0;
-    while (i < args->n)
-    {
-        pthread_join(philos[i].thread, NULL);
-        i++;
     }
+    print_status(philo, "has taken left fork");
+    pthread_mutex_lock(&philo->access->forks[philo->right]);
+    if (check_death(philo))
+    {
+        pthread_mutex_unlock(&philo->access->forks[philo->left]);
+        pthread_mutex_unlock(&philo->access->forks[philo->right]);
+        return (0);
+    }
+    print_status(philo, "has taken right fork");
     return (1);
 }
-
