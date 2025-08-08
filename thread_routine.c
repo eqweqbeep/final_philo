@@ -3,21 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   thread_routine.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: <login> <email@student.42.fr>               +#+  +:+       +#+        */
+/*   By: jait-chd <jait-chd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 00:00:00 by <login>           #+#    #+#             */
-/*   Updated: 2025/08/07 00:00:00 by <login>          ###   ########.fr       */
+/*   Created: 2025/08/08 15:43:29 by jait-chd          #+#    #+#             */
+/*   Updated: 2025/08/08 15:50:16 by jait-chd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		take_forks_even(t_philo *philo);
-int		take_forks_odd(t_philo *philo);
-int		check_death(t_philo *philo);
-void	print_status(t_philo *philo, char *msg);
-
-int take_forks(t_philo *philo)
+int	take_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0 || philo->id == philo->access->n)
 		return (take_forks_even(philo));
@@ -25,16 +20,16 @@ int take_forks(t_philo *philo)
 		return (take_forks_odd(philo));
 }
 
-void put_forks(t_philo *philo)
+void	put_forks(t_philo *philo)
 {
 	pthread_mutex_unlock(&philo->access->forks[philo->left]);
 	pthread_mutex_unlock(&philo->access->forks[philo->right]);
 }
 
-void eating(t_philo *philo)
+void	eating(t_philo *philo)
 {
 	if (check_death(philo))
-		return;
+		return ;
 	pthread_mutex_lock(&philo->access->set);
 	philo->last_meal_time = time_stamp_sch();
 	philo->meals_eaten++;
@@ -43,10 +38,10 @@ void eating(t_philo *philo)
 	usleep(philo->access->time_t_eat * 1000);
 }
 
-void sleeping(t_philo *philo)
+void	sleeping(t_philo *philo)
 {
 	if (check_death(philo))
-		return;
-	print_status(philo, "is sleepy");
+		return ;
+	print_status(philo, "is sleeping");
 	usleep(philo->access->time_t_sleep * 1000);
 }
