@@ -45,19 +45,19 @@ int setup_env(t_table *table) {
 	int	i;
 
 	i = 0;
-	if(!setup_mutexes(table))
-        return 1;
+       if (setup_mutexes(table))
+               return 1;
 	while(i < table->n) {
 		setup_table(table , table->philos , i);
 		i++;
 	}
-	if (!create_threads(table, table->philos))
-	{
-		destroy_mutexes(table);
-		free(table);
-		return (1);
-	}
-	destroy_mutexes(table);
-	free(table);
-	return 0;
+       if (!create_threads(table, table->philos))
+       {
+               destroy_mutexes(table);
+               free(table);
+               return (1);
+       }
+       destroy_mutexes(table);
+       free(table);
+       return (0);
 }

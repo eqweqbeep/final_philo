@@ -12,17 +12,17 @@
 
 #include "philo.h"
 
-
-
-int	main(int c, char **v)
+int     main(int c, char **v)
 {
-	t_table	*table;
-	if(!is_valid(c , v)) {
-		printf("Eroor : you should enter a spesific arg\n");
-		return 1;
-	}
-	table = init_shell(c ,v);
-	if(!setup_env(table))
-		return 1;
-	return (0);
+        t_table *table;
+
+        if (!is_valid(c, v))
+        {
+                printf("Eroor : you should enter a spesific arg\n");
+                return (1);
+        }
+        table = init_shell(c, v);
+        if (setup_env(table))
+                return (1);
+        return (0);
 }

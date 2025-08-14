@@ -20,16 +20,16 @@ int	setup_mutexes(t_table *args)
 	args->forks = malloc(sizeof(pthread_mutex_t) * args->n);
 	if (!args->forks)
 			return 1;
-	while (i < args->n)
-	{
-		if(!pthread_mutex_init(&args->forks[i], NULL))
-			return 1;
-		i++;
-	}
-	if(!pthread_mutex_init(&args->print, NULL))
-		return 1;
-	if(!pthread_mutex_init(&args->set, NULL))
-		return 1;
+       while (i < args->n)
+       {
+               if (pthread_mutex_init(&args->forks[i], NULL))
+                       return 1;
+               i++;
+       }
+       if (pthread_mutex_init(&args->print, NULL))
+               return 1;
+       if (pthread_mutex_init(&args->set, NULL))
+               return 1;
 	return 0;
 }
 
